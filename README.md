@@ -1,50 +1,92 @@
-# eslint-plugin-react-i18n-t
+# @kfb/i18n-t
 
-> 检测 React 代码中的中文文本，要求使用 `t()` 包裹，支持自动修复。仅依赖 ESLint 7+。
+[![npm version](https://badge.fury.io/js/%40kfb%2Fi18n-t.svg)](https://www.npmjs.com/package/@kfb/i18n-t)
+[![CI](https://github.com/你的用户名/仓库名/workflows/CI/badge.svg)](https://github.com/你的用户名/仓库名/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 安装
+> 🔍 ESLint 插件：自动检测 React 代码中的中文文本，要求使用 `t()` 包裹，支持一键自动修复。
+
+## ✨ 特性
+
+- 🎯 **精准检测** - 识别 JSX 文本、字符串字面量、模板字符串中的中文
+- 🔧 **自动修复** - 支持 `eslint --fix` 一键自动包裹中文文本
+- ⚙️ **灵活配置** - 可自定义国际化函数名（默认 `t()`）
+- 🚀 **轻量依赖** - 仅依赖 ESLint 7+，无额外运行时依赖
+- 📝 **TypeScript** - 使用 TypeScript 编写，提供完整类型支持
+- 🎨 **智能忽略** - 自动忽略 console 日志和已包裹的文本
+
+## 📦 安装
 
 ```bash
-npm install eslint eslint-plugin-react-i18n-t --save-dev
+npm install @kfb/i18n-t --save-dev
 # 或
-yarn add eslint eslint-plugin-react-i18n-t -D
+yarn add @kfb/i18n-t -D
+# 或
+pnpm add @kfb/i18n-t -D
 ```
 
-## 使用
+## 🚀 快速开始
 
-在 `.eslintrc` 中启用插件和规则：
+### 1. 基础配置
+
+在 `.eslintrc.json` 中启用插件和规则：
 
 ```json
 {
-  "plugins": ["react-i18n-t"],
+  "plugins": ["@kfb/i18n-t"],
   "rules": {
-    "react-i18n-t/no-chinese-text": "warn"
+    "@kfb/i18n-t/no-chinese-text": "warn"
   }
 }
 ```
 
-默认使用 `t()` 包裹中文文本，可在规则配置中自定义函数名：
+### 2. 自定义配置
+
+默认使用 `t()` 包裹中文文本，可自定义函数名：
 
 ```json
 {
   "rules": {
-    "react-i18n-t/no-chinese-text": ["warn", { "fnName": "translate" }]
+    "@kfb/i18n-t/no-chinese-text": ["warn", { "fnName": "translate" }]
   }
 }
 ```
 
-## 规则说明：`no-chinese-text`
+### 3. 运行检查
 
-- 检测 JSX 文本、字符串字面量、无插值的模板字符串中的中文。
-- 自动修复：将中文文本替换为 `{t('文本')}` 或 `t('文本')`。
-- 忽略：
-  - `console.*` 里的中文
-  - 已经包裹在 `t()`（或自定义 `fnName`）中的文本
-  - 注释（AST 不会报告注释内容）
+```bash
+# 检查代码
+npx eslint src/
 
-### 示例
+# 自动修复
+npx eslint src/ --fix
+```
 
-#### 错误示例（触发规则）
+## 📖 规则说明：`no-chinese-text`
+
+### 检测范围
+
+- ✅ JSX 文本节点中的中文
+- ✅ 字符串字面量中的中文
+- ✅ 无插值的模板字符串中的中文
+- ✅ JSX 属性值中的中文字符串
+
+### 自动修复行为
+
+- JSX 文本：`<div>中文</div>` → `<div>{t('中文')}</div>`
+- 字符串字面量：`const text = "中文"` → `const text = t('中文')`
+- 模板字符串：`const text = \`中文\`` → `const text = t('中文')`
+
+### 自动忽略
+
+- ❌ `console.*` 调用中的中文（调试日志）
+- ❌ 已经使用 `t()` 包裹的文本
+- ❌ 注释中的中文
+- ❌ 纯英文和数字
+
+## 📝 使用示例
+
+### ❌ 错误示例（触发规则）
 
 ```jsx
 // 字符串字面量中的中文
@@ -66,7 +108,7 @@ function Component() {
 const errorMsg = `操作失败，请重试`;
 ```
 
-#### 正确示例（不触发规则）
+### ✅ 正确示例（不触发规则）
 
 ```jsx
 // 已经使用 t() 包裹
@@ -97,7 +139,7 @@ const english = "Hello World";
 const numbers = "123456";
 ```
 
-#### 自动修复示例
+### 🔧 自动修复示例
 
 **修复前：**
 ```jsx
@@ -127,35 +169,158 @@ function UserProfile({ name }) {
 }
 ```
 
-#### 自定义函数名示例
+### ⚙️ 自定义函数名示例
 
-配置：
+**配置：**
 ```json
 {
   "rules": {
-    "react-i18n-t/no-chinese-text": ["warn", { "fnName": "i18n" }]
+    "@kfb/i18n-t/no-chinese-text": ["warn", { "fnName": "i18n" }]
   }
 }
 ```
 
-修复后：
+**修复后：**
 ```jsx
 function Component() {
   return <div>{i18n('中文内容')}</div>;
 }
 ```
 
-### 兼容性
+## 🔧 配置选项
 
-- 仅依赖 ESLint 7+，React 项目（JSX/TSX）。
-- 规则使用 TypeScript 编写，`npm run build` 生成 `dist`。
+### `fnName`
 
-## 开发
+指定国际化函数名称，默认为 `t`。
 
-```bash
-npm install
-npm run build
+```json
+{
+  "rules": {
+    "@kfb/i18n-t/no-chinese-text": ["warn", { "fnName": "i18n" }]
+  }
+}
 ```
 
-发布到 npm 前请执行 `npm run build` 生成编译产物。可以在 GitHub Actions 中添加 `npm test`/`npm run lint` 以保证规则质量。
+## 🌟 最佳实践
 
+### 1. 与 ESLint 配置集成
+
+```json
+{
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "plugins": ["@kfb/i18n-t"],
+  "rules": {
+    "@kfb/i18n-t/no-chinese-text": "error"
+  }
+}
+```
+
+### 2. 在 CI/CD 中使用
+
+项目已配置 GitHub Actions，会自动在 PR 和 push 时运行检查。
+
+### 3. 团队协作建议
+
+- 在 `package.json` 中添加 lint 脚本
+- 使用 `pre-commit` hook 确保代码提交前通过检查
+- 设置为 `error` 级别强制执行国际化规范
+
+## 💻 开发
+
+### 环境要求
+
+- Node.js >= 14
+- npm >= 6
+
+### 本地开发
+
+```bash
+# 克隆仓库
+git clone https://github.com/你的用户名/仓库名.git
+cd 仓库名
+
+# 安装依赖
+npm install
+
+# 构建项目
+npm run build
+
+# 运行示例检查
+npm run examples:check
+
+# 自动修复示例
+npm run examples:fix
+
+# 代码检查
+npm run lint
+```
+
+### 项目结构
+
+```
+.
+├── src/                    # 源代码
+│   ├── index.ts           # 插件入口
+│   └── rules/             # 规则实现
+│       └── no-chinese-text.ts
+├── dist/                  # 编译产物（构建生成）
+├── examples/              # 示例代码
+│   ├── bad/              # 错误示例
+│   └── good/             # 正确示例
+├── .github/
+│   └── workflows/        # GitHub Actions
+│       ├── ci.yml        # 持续集成
+│       └── release.yml   # 自动发布
+└── package.json
+```
+
+## 📦 发布流程
+
+本项目使用 GitHub Actions 自动发布到 NPM：
+
+```bash
+# 1. 更新版本号
+npm version patch  # 或 minor / major
+
+# 2. 推送 tag 触发自动发布
+git push origin v0.1.1
+```
+
+## 🤝 贡献指南
+
+欢迎贡献代码、报告问题或提出建议！
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启 Pull Request
+
+## 📄 许可证
+
+MIT License - 详见 [LICENSE](LICENSE) 文件
+
+## 🔗 相关链接
+
+- [NPM Package](https://www.npmjs.com/package/@kfb/i18n-t)
+- [GitHub Repository](https://github.com/你的用户名/仓库名)
+- [Issues](https://github.com/你的用户名/仓库名/issues)
+
+## ⚡ 兼容性
+
+- **Node.js**: >= 14
+- **ESLint**: >= 7
+- **React**: JSX/TSX 项目
+
+## 📊 版本历史
+
+### v0.1.0 (2024-12-14)
+
+- 🎉 首次发布
+- ✨ 支持检测 JSX 文本、字符串字面量中的中文
+- 🔧 支持自动修复
+- ⚙️ 支持自定义函数名
+
+---
+
+Made with ❤️ by [Your Name]
