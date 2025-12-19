@@ -1,6 +1,6 @@
 {
   "name": "@kfb/i18n-t",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ESLint 规则：检测 React 代码中的中文文本并要求使用 t() 包裹，支持自动修复。",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,12 +8,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/你的用户名/仓库名.git"
+    "url": "git+https://github.com/williammyuan/i18n.git"
   },
   "bugs": {
-    "url": "https://github.com/你的用户名/仓库名/issues"
+    "url": "https://github.com/williammyuan/i18n/issues"
   },
-  "homepage": "https://github.com/你的用户名/仓库名#readme",
+  "homepage": "https://github.com/williammyuan/i18n#readme",
   "files": [
     "dist"
   ],

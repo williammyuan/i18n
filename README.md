@@ -1,7 +1,7 @@
 # @kfb/i18n-t
 
 [![npm version](https://badge.fury.io/js/%40kfb%2Fi18n-t.svg)](https://www.npmjs.com/package/@kfb/i18n-t)
-[![CI](https://github.com/你的用户名/仓库名/workflows/CI/badge.svg)](https://github.com/你的用户名/仓库名/actions)
+[![CI](https://github.com/williammyuan/i18n/workflows/CI/badge.svg)](https://github.com/williammyuan/i18n/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > 🔍 ESLint 插件：自动检测 React 代码中的中文文本，要求使用 `t()` 包裹，支持一键自动修复。
@@ -29,7 +29,28 @@ pnpm add @kfb/i18n-t -D
 
 ### 1. 基础配置
 
-在 `.eslintrc.json` 中启用插件和规则：
+#### ESLint 9+ (Flat Config)
+
+在 `eslint.config.js` 或 `eslint.config.mjs` 中配置：
+
+```javascript
+import i18nT from '@kfb/i18n-t';
+
+export default [
+  {
+    plugins: {
+      '@kfb/i18n-t': i18nT
+    },
+    rules: {
+      '@kfb/i18n-t/no-chinese-text': 'warn'
+    }
+  }
+];
+```
+
+#### ESLint 7/8 (传统配置)
+
+在 `.eslintrc.json` 或 `.eslintrc.js` 中配置：
 
 ```json
 {
@@ -43,6 +64,25 @@ pnpm add @kfb/i18n-t -D
 ### 2. 自定义配置
 
 默认使用 `t()` 包裹中文文本，可自定义函数名：
+
+#### ESLint 9+ (Flat Config)
+
+```javascript
+import i18nT from '@kfb/i18n-t';
+
+export default [
+  {
+    plugins: {
+      '@kfb/i18n-t': i18nT
+    },
+    rules: {
+      '@kfb/i18n-t/no-chinese-text': ['warn', { fnName: 'translate' }]
+    }
+  }
+];
+```
+
+#### ESLint 7/8 (传统配置)
 
 ```json
 {
@@ -171,7 +211,21 @@ function UserProfile({ name }) {
 
 ### ⚙️ 自定义函数名示例
 
-**配置：**
+**ESLint 9+ 配置：**
+```javascript
+import i18nT from '@kfb/i18n-t';
+
+export default [
+  {
+    plugins: { '@kfb/i18n-t': i18nT },
+    rules: {
+      '@kfb/i18n-t/no-chinese-text': ['warn', { fnName: 'i18n' }]
+    }
+  }
+];
+```
+
+**ESLint 7/8 配置：**
 ```json
 {
   "rules": {
@@ -193,6 +247,19 @@ function Component() {
 
 指定国际化函数名称，默认为 `t`。
 
+**ESLint 9+：**
+```javascript
+export default [
+  {
+    plugins: { '@kfb/i18n-t': i18nT },
+    rules: {
+      '@kfb/i18n-t/no-chinese-text': ['warn', { fnName: 'i18n' }]
+    }
+  }
+];
+```
+
+**ESLint 7/8：**
 ```json
 {
   "rules": {
@@ -205,6 +272,27 @@ function Component() {
 
 ### 1. 与 ESLint 配置集成
 
+**ESLint 9+ (Flat Config)：**
+```javascript
+import js from '@eslint/js';
+import react from 'eslint-plugin-react';
+import i18nT from '@kfb/i18n-t';
+
+export default [
+  js.configs.recommended,
+  react.configs.flat.recommended,
+  {
+    plugins: {
+      '@kfb/i18n-t': i18nT
+    },
+    rules: {
+      '@kfb/i18n-t/no-chinese-text': 'error'
+    }
+  }
+];
+```
+
+**ESLint 7/8 (传统配置)：**
 ```json
 {
   "extends": ["eslint:recommended", "plugin:react/recommended"],
@@ -236,8 +324,8 @@ function Component() {
 
 ```bash
 # 克隆仓库
-git clone https://github.com/你的用户名/仓库名.git
-cd 仓库名
+git clone https://github.com/williammyuan/i18n.git
+cd i18n
 
 # 安装依赖
 npm install
@@ -303,14 +391,25 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 ## 🔗 相关链接
 
 - [NPM Package](https://www.npmjs.com/package/@kfb/i18n-t)
-- [GitHub Repository](https://github.com/你的用户名/仓库名)
-- [Issues](https://github.com/你的用户名/仓库名/issues)
+- [GitHub Repository](https://github.com/williammyuan/i18n)
+- [Issues](https://github.com/williammyuan/i18n/issues)
 
 ## ⚡ 兼容性
 
 - **Node.js**: >= 14
 - **ESLint**: >= 7
+  - ESLint 7/8: 使用传统配置格式（`.eslintrc.*`）
+  - ESLint 9+: 支持扁平配置格式（`eslint.config.js`）
 - **React**: JSX/TSX 项目
+
+### 如何确认您的 ESLint 版本？
+
+```bash
+npx eslint --version
+```
+
+- 如果版本是 7.x 或 8.x，请使用传统配置格式
+- 如果版本是 9.x 及以上，建议使用扁平配置格式（Flat Config）
 
 ## 📊 版本历史
 
